@@ -1,6 +1,6 @@
 import graphene
 from django.db.utils import IntegrityError
-from discord_game.models import Profile, Item
+from discord_game.models import Profile, Item, Zone, Area
 from kessel.settings.common import __version__
 
 
@@ -13,7 +13,20 @@ class ProfileType(graphene.ObjectType):
     is_dead = graphene.Boolean()
     life = graphene.Int()
     bag = graphene.relay.ConnectionField('discord_game.schema.ItemConnection')
-    
+    actual_postion = graphene.List(graphene.Int)
+    actual_zone = graphene.Field('discord_game.schema.ZoneType')
+    actual_area = graphene.Field('discord_game.schema.AreaType')
+
+    def resolve_actual_position(self, info, **kwargs):
+        if self.actual_x_postion and self.actual_y_position:
+            return [self.actual_x_position, self.actual_y_position]
+        return None
+
+    def resolve_actual_zone(self, info, **kwargs):
+        return self.actual_zone
+
+    def resolve_actual_area(self, info, **kwargs):
+        return self.actual_area
 
     def resolve_bag(self, info, **kwargs):
         return self.bag.all()
@@ -43,6 +56,42 @@ class ItemConnection(graphene.relay.Connection):
         node = ItemType
 
 
+class AreaType(graphene.ObjectType):
+    """
+    Define um serializador graphql para o objeto Area
+    """
+    area_reference = graphene.String()
+    area_row_max_size = graphene.Int()
+    area_column_max_size = graphene.Int()
+
+    class Meta:
+        interfaces = (graphene.relay.Node,)
+
+
+class AreaConnection(graphene.relay.Connection):
+    class Meta:
+        node = AreaType
+
+
+class ZoneType(graphene.ObjectType):
+    """
+    Define um serializador para o objeto Zona
+    """
+    zone_reference = graphene.String()
+    areas = graphene.relay.ConnectionField(AreaConnection)
+
+    def resolve_areas(self, info, **kwargs):
+        return self.areas.all()
+
+    class Meta:
+        interfaces = (graphene.relay.Node,)
+
+
+class ZoneConnection(graphene.relay.Connection):
+    class Meta:
+        node = ZoneType
+
+
 class Query(object):
     """
     Consultas da API.
@@ -60,6 +109,14 @@ class Query(object):
     items = graphene.relay.ConnectionField(ItemConnection)
     def resolve_items(self, info, **kwarg):
         return Item.objects.all()
+
+    zones = graphene.relay.ConnectionField(ZoneConnection)
+    def resolve_zones(self, info, **kwargs):
+        return Zone.objects.all()
+
+    areas = graphene.relay.ConnectionField(AreaConnection)
+    def resolve_areas(self, info, **kwargs):
+        return Area.objects.all()
 
 
 class ProfileRegister(graphene.relay.ClientIDMutation):
