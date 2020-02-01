@@ -13,6 +13,7 @@ class ProfileType(graphene.ObjectType):
     is_dead = graphene.Boolean()
     life = graphene.Int()
     bag = graphene.relay.ConnectionField('discord_game.schema.ItemConnection')
+    
 
     def resolve_bag(self, info, **kwargs):
         return self.bag.all()
