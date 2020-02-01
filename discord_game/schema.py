@@ -10,6 +10,12 @@ class ProfileType(graphene.ObjectType):
     """
     discord_id = graphene.String()
     exp_earned = graphene.Int()
+    is_dead = graphene.Boolean()
+    life = graphene.Int()
+    bag = graphene.relay.ConnectionField('discord_game.schema.ItemConnection')
+
+    def resolve_bag(self, info, **kwargs):
+        return self.bag.all()
 
     class Meta:
         interfaces = (graphene.relay.Node,)

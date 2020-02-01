@@ -12,6 +12,9 @@ class Profile(models.Model):
         unique=True
     )
     exp_earned = models.IntegerField(default=0)
+    life = models.IntegerField(default=100)
+    is_dead = models.BooleanField(default=False)
+    bag = models.ManyToManyField('discord_game.Item')
 
 
 class Item(models.Model):
