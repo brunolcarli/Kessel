@@ -6,7 +6,7 @@
 
 [![Generic badge](https://img.shields.io/badge/docs-blue.svg)](https://github.com/brunolcarli/way_back_home_api/wiki)
 
-![Generic badge](https://img.shields.io/badge/version-0.0.2-green.svg)
+![Generic badge](https://img.shields.io/badge/version-0.0.3-green.svg)
 
 
 API Backend for the game **Way Back Home** on the Global Game Jam 2020
