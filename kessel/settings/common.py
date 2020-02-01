@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'graphene_django',
     'gunicorn',
+    'discord_game',
 ]
 
 MIDDLEWARE = [
