@@ -14,3 +14,8 @@ class Resolver:
 
     def get_zones(**kwargs):
         return Zone.objects.filter(**kwargs)
+
+    def get_areas(**kwargs):
+        if kwargs:
+            return Area.objects.filter(zone__in=Zone.objects.filter(**kwargs))
+        return Area.objects.all()
