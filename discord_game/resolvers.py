@@ -11,3 +11,6 @@ class Resolver:
 
     def get_items(**kwargs):
         return Item.objects.filter(**kwargs)
+
+    def get_zones(**kwargs):
+        return Zone.objects.filter(**kwargs)

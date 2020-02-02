@@ -129,9 +129,12 @@ class Query(object):
     def resolve_items(self, info, **kwargs):
         return Resolver.get_items(**kwargs)
 
-    zones = graphene.relay.ConnectionField(ZoneConnection)
+    zones = graphene.relay.ConnectionField(
+        ZoneConnection,
+        zone_reference__icontains=graphene.String()
+    )
     def resolve_zones(self, info, **kwargs):
-        return Zone.objects.all()
+        return Resolver.get_zones(**kwargs)
 
     areas = graphene.relay.ConnectionField(AreaConnection)
     def resolve_areas(self, info, **kwargs):
