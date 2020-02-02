@@ -122,9 +122,12 @@ class Query(object):
     def resolve_profiles(self, info, **kwargs):
         return Resolver.get_profiles(**kwargs)
 
-    items = graphene.relay.ConnectionField(ItemConnection)
-    def resolve_items(self, info, **kwarg):
-        return Item.objects.all()
+    items = graphene.relay.ConnectionField(
+        ItemConnection,
+        name=graphene.String()
+    )
+    def resolve_items(self, info, **kwargs):
+        return Resolver.get_items(**kwargs)
 
     zones = graphene.relay.ConnectionField(ZoneConnection)
     def resolve_zones(self, info, **kwargs):

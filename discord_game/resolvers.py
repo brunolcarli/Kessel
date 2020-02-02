@@ -8,3 +8,6 @@ class Resolver:
 
     def get_profiles(**kwargs):
         return Profile.objects.filter(**kwargs)
+
+    def get_items(**kwargs):
+        return Item.objects.filter(**kwargs)
