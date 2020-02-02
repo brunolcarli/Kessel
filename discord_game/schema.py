@@ -13,12 +13,12 @@ class ProfileType(graphene.ObjectType):
     is_dead = graphene.Boolean()
     life = graphene.Int()
     bag = graphene.relay.ConnectionField('discord_game.schema.ItemConnection')
-    actual_postion = graphene.List(graphene.Int)
+    actual_position = graphene.List(graphene.Int)
     actual_zone = graphene.Field('discord_game.schema.ZoneType')
     actual_area = graphene.Field('discord_game.schema.AreaType')
 
     def resolve_actual_position(self, info, **kwargs):
-        if self.actual_x_postion and self.actual_y_position:
+        if self.actual_x_position and self.actual_y_position:
             return [self.actual_x_position, self.actual_y_position]
         return None
 
