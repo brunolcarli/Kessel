@@ -55,6 +55,7 @@ class ItemType(graphene.ObjectType):
     """
     name = graphene.String()
     description = graphene.String()
+    weight = graphene.Int()
 
     class Meta:
         interfaces = (graphene.relay.Node,)

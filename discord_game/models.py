@@ -35,6 +35,7 @@ class Item(models.Model):
     """
     name = models.CharField(max_length=30, null=False, blank=False, unique=True)
     description = models.TextField(blank=True, null=True)
+    weight = models.IntegerField(default=1)
 
 
 class CarryItem(models.Model):
