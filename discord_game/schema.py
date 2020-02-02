@@ -259,7 +259,46 @@ class RemoveItemFromBag(graphene.relay.ClientIDMutation):
         return RemoveItemFromBag(profile)
 
 
+class SetPlayerPosition(graphene.relay.ClientIDMutation):
+    """
+    Posiciona o jogador em uma determinada coordenada da área em que está
+    localizado.
+    """
+    profile = graphene.Field(ProfileType)
+
+    class Input:
+        area_reference = graphene.String(required=True)
+        discord_id = graphene.String(required=True)
+        x_coord = graphene.Int(required=True)
+        y_coord = graphene.Int(required=True)
+
+    def mutate_and_get_payload(self, info, **_input):
+        x_coord = abs(_input.get('x_coord'))
+        y_coord = abs(_input.get('y_coord'))
+
+        try:
+            profile = Profile.objects.get(discord_id=_input.get('discord_id'))
+        except Profile.DoesNotExist:
+            raise Exception('Profile fornecido não encontrado')
+
+        try:
+            area = Area.objects.get(area_reference=_input.get('area_reference'))
+        except Area.DoesNotExist:
+            raise Exception('Area fornecida não encontrada')
+
+        if x_coord > area.area_row_max_size or y_coord > area.area_column_max_size:
+            raise Exception('Coordenada inválida para esta área.')
+
+        profile.actual_area = area
+        profile.actual_zone = area.zone_set.distinct().first()
+        profile.actual_x_position = x_coord
+        profile.actual_y_position = y_coord
+        profile.save()
+
+        return SetPlayerPosition(profile)
+
 class Mutation(object):
     profile_register = ProfileRegister.Field()
     add_item_to_bag = AddItemToBag.Field()
     remove_item_from_bag = RemoveItemFromBag.Field()
+    set_player_position = SetPlayerPosition.Field()
