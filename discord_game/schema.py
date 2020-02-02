@@ -1,6 +1,15 @@
+r"""
+Módulo para definição dos bjetos graphql.
+Objetos, Query (consultas) e Mutations.
+
+╦╔═┌─┐┌─┐┌─┐┌─┐┬    ╔═╗╔═╗╦
+╠╩╗├┤ └─┐└─┐├┤ │    ╠═╣╠═╝║
+╩ ╩└─┘└─┘└─┘└─┘┴─┘  ╩ ╩╩  ╩
+"""
 import graphene
 from django.db.utils import IntegrityError
 from discord_game.models import Profile, Item, Zone, Area
+from discord_game.resolvers import Resolver
 from kessel.settings.common import __version__
 
 
@@ -92,6 +101,9 @@ class ZoneConnection(graphene.relay.Connection):
         node = ZoneType
 
 
+##################################################
+# QUERY
+##################################################
 class Query(object):
     """
     Consultas da API.
@@ -102,9 +114,13 @@ class Query(object):
     def resolve_api_version(self, info, **kwargs):
         return __version__
 
-    profiles = graphene.relay.ConnectionField(ProfileConnection)
-    def resolve_profiles(self, info, **kwarg):
-        return Profile.objects.all()
+    profiles = graphene.relay.ConnectionField(
+        ProfileConnection,
+        discord_id=graphene.String(),
+        is_dead=graphene.Boolean(),
+    )
+    def resolve_profiles(self, info, **kwargs):
+        return Resolver.get_profiles(**kwargs)
 
     items = graphene.relay.ConnectionField(ItemConnection)
     def resolve_items(self, info, **kwarg):
@@ -119,6 +135,9 @@ class Query(object):
         return Area.objects.all()
 
 
+##################################################
+# Mutation
+##################################################
 class ProfileRegister(graphene.relay.ClientIDMutation):
     """
     Registra o profile de um usuário no sistema.
