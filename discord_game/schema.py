@@ -8,7 +8,7 @@ Objetos, Query (consultas) e Mutations.
 """
 import graphene
 from django.db.utils import IntegrityError
-from discord_game.models import Profile, Item, Zone, Area
+from discord_game.models import Profile, Item, Zone, Area, CarryItem
 from discord_game.resolvers import Resolver
 from kessel.settings.common import __version__
 
@@ -186,5 +186,41 @@ class ProfileRegister(graphene.relay.ClientIDMutation):
         return ProfileRegister(profile)
 
 
+class AddItemToBag(graphene.relay.ClientIDMutation):
+    """
+    Adiciona um item na bolsa de um jogador.
+    """
+    profile = graphene.Field(ProfileType)
+
+    class Input:
+        discord_id = graphene.String(required=True)
+        item_name = graphene.String(required=True)
+
+    def mutate_and_get_payload(self, info, **_input):
+        try:
+            profile = Profile.objects.get(discord_id=_input.get('discord_id'))
+        except Profile.DoesNotExist:
+            raise Exception('Profile fornecido não encontrado')
+
+        try:
+            item = Item.objects.get(name=_input.get('item_name'))
+        except Item.DoesNotExist:
+            raise Exception('Item fornecido não encontrado')
+
+        if not profile.bag.filter(item=item):
+            looted = CarryItem.objects.create(item=item)
+            looted.save()
+            profile.bag.add(looted)
+            profile.save()
+
+        else:
+            looted = profile.bag.get(item=item)
+            looted.stock += 1
+            looted.save()
+
+        return AddItemToBag(profile)
+    
+
 class Mutation(object):
     profile_register = ProfileRegister.Field()
+    add_item_to_bag = AddItemToBag.Field()
