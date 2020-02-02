@@ -14,7 +14,7 @@ class Profile(models.Model):
     exp_earned = models.IntegerField(default=0)
     life = models.IntegerField(default=100)
     is_dead = models.BooleanField(default=False)
-    bag = models.ManyToManyField('discord_game.Item')
+    bag = models.ManyToManyField('discord_game.CarryItem')
     actual_x_position = models.IntegerField(null=True, default=None)
     actual_y_position = models.IntegerField(null=True, default=None)
     actual_zone = models.ForeignKey(
@@ -35,6 +35,15 @@ class Item(models.Model):
     """
     name = models.CharField(max_length=30, null=False, blank=False, unique=True)
     description = models.TextField(blank=True, null=True)
+
+
+class CarryItem(models.Model):
+    item = models.ForeignKey(
+        Item,
+        on_delete=models.CASCADE,
+        null=True
+    )
+    stock = models.IntegerField(default=1)
 
 
 class Area(models.Model):

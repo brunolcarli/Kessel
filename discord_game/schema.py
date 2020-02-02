@@ -21,7 +21,7 @@ class ProfileType(graphene.ObjectType):
     exp_earned = graphene.Int()
     is_dead = graphene.Boolean()
     life = graphene.Int()
-    bag = graphene.relay.ConnectionField('discord_game.schema.ItemConnection')
+    bag = graphene.relay.ConnectionField('discord_game.schema.CarryItemConnection')
     actual_position = graphene.List(graphene.Int)
     actual_zone = graphene.Field('discord_game.schema.ZoneType')
     actual_area = graphene.Field('discord_game.schema.AreaType')
@@ -64,6 +64,25 @@ class ItemConnection(graphene.relay.Connection):
     class Meta:
         node = ItemType
 
+
+class CarryItemType(graphene.ObjectType):
+    """
+    Define a quantia de itens de um mesmo tipo que o jogador
+    carrega na bolsa
+    """
+    item = graphene.Field(ItemType)
+    stock = graphene.Int()
+
+    def resolve_item(self, info, **kwargs):
+        return self.item
+
+    class Meta:
+        interfaces = (graphene.relay.Node, )
+
+
+class CarryItemConnection(graphene.relay.Connection):
+    class Meta:
+        node = CarryItemType
 
 class AreaType(graphene.ObjectType):
     """
