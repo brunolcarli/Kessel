@@ -219,8 +219,42 @@ class AddItemToBag(graphene.relay.ClientIDMutation):
             looted.save()
 
         return AddItemToBag(profile)
-    
+
+
+class RemoveItemFromBag(graphene.relay.ClientIDMutation):
+    """
+    Remove um item da bolsa de um jogador
+    """
+    profile = graphene.Field(ProfileType)
+
+    class Input:
+        discord_id = graphene.String(required=True)
+        item_name = graphene.String(required=True)
+
+    def mutate_and_get_payload(self, info, **_input):
+        try:
+            profile = Profile.objects.get(discord_id=_input.get('discord_id'))
+        except Profile.DoesNotExist:
+            raise Exception('Profile fornecido não encontrado')
+
+        try:
+            item = Item.objects.get(name=_input.get('item_name'))
+        except Item.DoesNotExist:
+            raise Exception('Item fornecido não encontrado')
+
+        if not profile.bag.filter(item=item):
+            raise Exception('Este jogador não possui este item')
+
+        looted = profile.bag.get(item=item)
+        looted.stock -= 1
+        looted.save()
+        if looted.stock <= 0:
+            looted.delete()
+
+        return RemoveItemFromBag(profile)
+
 
 class Mutation(object):
     profile_register = ProfileRegister.Field()
     add_item_to_bag = AddItemToBag.Field()
+    remove_item_from_bag = RemoveItemFromBag.Field()
