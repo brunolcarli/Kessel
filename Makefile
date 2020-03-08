@@ -1,4 +1,7 @@
 # Local Settigns
+install_local:
+	pip3 install -r kessel/requirements/development.txt
+
 migrate:
 	python3 manage.py makemigrations --settings=kessel.settings.common
 	python3 manage.py migrate --settings=kessel.settings.common
