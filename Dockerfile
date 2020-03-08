@@ -13,8 +13,8 @@ RUN apk add --no-cache \
             gcc
 
 COPY kessel/requirements/common.txt .
-COPY kessel/requirements/docker.txt .
-RUN pip install -r docker.txt
+COPY kessel/requirements/production.txt .
+RUN pip install -r production.txt
 
 COPY . .
 
