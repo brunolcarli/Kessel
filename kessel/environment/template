@@ -1,0 +1,8 @@
+DJANGO_SETTINGS_MODULE=<your settings module>
+DJANGO_SECRET_KEY=<your secret key>
+
+MYSQL_ROOT_PASSWORD=<your database root password>
+MYSQL_USER=<your db user>
+MYSQL_DATABASE=<your database>
+MYSQL_PASSWORD=<your db password>
+MYSQL_HOST=<your db host>

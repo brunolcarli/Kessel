@@ -1,0 +1,19 @@
+  
+version: '3'
+
+services:
+  kessel:
+    build: .    
+    image: kessel:devel
+    restart: on-failure
+    container_name: kessel_container
+    command: gunicorn -w 3 kessel.wsgi:application -b :5666
+    env_file: kessel/environment/kessel.env
+    volumes:
+      - .:/app
+      - static_data:/app/static
+    ports:
+      - "5666:5666"
+
+volumes:
+  static_data:
