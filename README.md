@@ -5,6 +5,7 @@
 # Kessel API
 
 >![GraphQl Badge](https://badgen.net/badge/icon/graphql/pink?icon=graphql&label)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/292d364b5a2b41dea2b5fa543476395c)](https://app.codacy.com/manual/brunolcarli/Kessel?utm_source=github.com&utm_medium=referral&utm_content=brunolcarli/Kessel&utm_campaign=Badge_Grade_Dashboard)
 [![Docs Link](https://badgen.net/badge/docs/github_wiki?icon=github)](https://github.com/brunolcarli/Kessel/wiki)
 ![Version badge](https://img.shields.io/badge/version-0.0.9-green.svg)
 
